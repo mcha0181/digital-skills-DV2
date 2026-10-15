@@ -1,0 +1,130 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 690,
+  "height": 440,
+  "projection": {
+    "type": "mercator"
+  },
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "view": {
+      "stroke": null
+    },
+    "legend": {
+      "titleFontSize": 13,
+      "labelFontSize": 12,
+      "titleColor": "#263940",
+      "labelColor": "#263940"
+    }
+  },
+  "title": {
+    "text": "ACT leads in online Census responses",
+    "subtitle": "2021 · share of forms completed online (%)",
+    "anchor": "start",
+    "fontSize": 18,
+    "fontWeight": "normal",
+    "color": "#263940",
+    "subtitleColor": "#59696d"
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/australia_outline.geojson",
+        "format": {
+          "type": "json",
+          "property": "features"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e6eae7",
+        "stroke": "#849795",
+        "strokeWidth": 1.1
+      }
+    },
+    {
+      "data": {
+        "url": "data/states_census_map.csv"
+      },
+      "mark": {
+        "type": "circle",
+        "color": "#0072B2",
+        "stroke": "#ffffff",
+        "strokeWidth": 2,
+        "opacity": 0.8
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "online2021",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ],
+            "range": [
+              40,
+              2300
+            ]
+          },
+          "legend": {
+            "title": "Online Census response (%)",
+            "orient": "bottom",
+            "values": [
+              60,
+              75,
+              90
+            ]
+          }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State / territory"
+          },
+          {
+            "field": "online2021",
+            "type": "quantitative",
+            "title": "Response (%)",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/states_census_map.csv"
+      },
+      "mark": {
+        "type": "text",
+        "dy": -22,
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "color": "#263940"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "code",
+          "type": "nominal"
+        }
+      }
+    }
+  ]
+}

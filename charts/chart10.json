@@ -1,0 +1,134 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 690,
+  "height": 440,
+  "projection": {
+    "type": "mercator"
+  },
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "view": {
+      "stroke": null
+    },
+    "legend": {
+      "titleFontSize": 13,
+      "labelFontSize": 12,
+      "titleColor": "#263940",
+      "labelColor": "#263940"
+    }
+  },
+  "title": {
+    "text": "Digital ability is highest in the ACT",
+    "subtitle": "2025 · state scores out of 100",
+    "anchor": "start",
+    "fontSize": 18,
+    "fontWeight": "normal",
+    "color": "#263940",
+    "subtitleColor": "#59696d"
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/australia_outline.geojson",
+        "format": {
+          "type": "json",
+          "property": "features"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e6eae7",
+        "stroke": "#849795",
+        "strokeWidth": 1.1
+      }
+    },
+    {
+      "data": {
+        "url": "data/states_2025.csv"
+      },
+      "transform": [
+        {
+          "calculate": "datum.ability < 72 ? 'Below 72' : datum.ability < 76 ? '72–75.9' : '76 or more'",
+          "as": "band"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 1100,
+        "stroke": "white",
+        "strokeWidth": 2,
+        "opacity": 0.92
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "color": {
+          "field": "band",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Below 72",
+              "72–75.9",
+              "76 or more"
+            ],
+            "range": [
+              "#D55E00",
+              "#8EAAB6",
+              "#0072B2"
+            ]
+          },
+          "legend": {
+            "title": "Ability score bands",
+            "orient": "bottom",
+            "direction": "horizontal"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State / territory"
+          },
+          {
+            "field": "ability",
+            "type": "quantitative",
+            "title": "Ability score",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/states_2025.csv"
+      },
+      "mark": {
+        "type": "text",
+        "dy": -20,
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "color": "#263940"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "code",
+          "type": "nominal"
+        }
+      }
+    }
+  ]
+}
