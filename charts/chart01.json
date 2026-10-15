@@ -1,0 +1,141 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "ACT tops the digital ability rankings",
+    "subtitle": "Digital Ability Index, 2025 · higher is better",
+    "anchor": "start",
+    "font": "Arial",
+    "fontWeight": "normal",
+    "fontSize": 17,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#59696d",
+    "color": "#263940",
+    "offset": 14
+  },
+  "width": "container",
+  "height": 315,
+  "data": {
+    "url": "data/states_2025.csv"
+  },
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#20343B",
+      "titleColor": "#20343B",
+      "gridColor": "#e5e9e5",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    },
+    "legend": {
+      "labelColor": "#20343B",
+      "titleColor": "#20343B",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "color": "#e0e5e3"
+      },
+      "encoding": {
+        "y": {
+          "field": "code",
+          "type": "nominal",
+          "sort": {
+            "field": "ability",
+            "order": "descending"
+          },
+          "title": null
+        },
+        "x": {
+          "datum": 60,
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "ability",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 170
+      },
+      "encoding": {
+        "y": {
+          "field": "code",
+          "type": "nominal",
+          "sort": {
+            "field": "ability",
+            "order": "descending"
+          },
+          "title": null
+        },
+        "x": {
+          "field": "ability",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              60,
+              85
+            ]
+          },
+          "title": "Digital ability score"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.code === \"ACT\"",
+            "value": "#0072B2"
+          },
+          "value": "#9AA9AC"
+        },
+        "tooltip": [
+          {
+            "field": "state"
+          },
+          {
+            "field": "ability",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 11,
+        "fontSize": 12,
+        "color": "#243746"
+      },
+      "encoding": {
+        "y": {
+          "field": "code",
+          "type": "nominal",
+          "sort": {
+            "field": "ability",
+            "order": "descending"
+          },
+          "title": null
+        },
+        "x": {
+          "field": "ability",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "ability",
+          "type": "quantitative",
+          "format": ".1f"
+        }
+      }
+    }
+  ]
+}
