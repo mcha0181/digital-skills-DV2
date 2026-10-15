@@ -1,0 +1,9 @@
+code,state,index,access,affordability,ability,lon,lat,tile_x,tile_y,map_x,map_y
+NSW,New South Wales,74.0,77.0,71.1,73.8,151,-33.9,1,5,7,5
+VIC,Victoria,74.1,77.5,70.5,74.3,145,-37.0,2,6,7,6
+QLD,Queensland,72.9,76.3,69.3,73.0,145,-22.0,3,3,7,2
+SA,South Australia,71.3,75.7,66.9,71.3,135,-30.0,1,4,4,4
+WA,Western Australia,73.9,77.1,70.8,73.7,121,-26.0,0,3,1,4
+TAS,Tasmania,69.4,73.0,65.4,69.7,147,-42.0,2,7,8,7
+NT,Northern Territory,72.5,71.7,71.9,73.7,133,-19.0,1,2,3,2
+ACT,Australian Capital Territory,79.5,80.9,78.0,79.6,149,-35.3,3,6,8,5
