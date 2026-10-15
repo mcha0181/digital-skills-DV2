@@ -1,0 +1,146 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "The age gap is still 47.4 points",
+    "subtitle": "Digital Ability Index, 2025 · points, not percent",
+    "anchor": "start",
+    "font": "Arial",
+    "fontWeight": "normal",
+    "fontSize": 17,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#59696d",
+    "color": "#263940",
+    "offset": 14
+  },
+  "width": "container",
+  "height": 180,
+  "data": {
+    "url": "data/group_comparison.csv"
+  },
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#20343B",
+      "titleColor": "#20343B",
+      "gridColor": "#e5e9e5",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    },
+    "legend": {
+      "labelColor": "#20343B",
+      "titleColor": "#20343B",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    }
+  },
+  "transform": [
+    {
+      "filter": "datum.group === \"18–34 years\" || datum.group === \"75+ years\""
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 4,
+        "color": "#dce7e1"
+      },
+      "encoding": {
+        "x": {
+          "datum": 0
+        },
+        "x2": {
+          "field": "score"
+        },
+        "y": {
+          "field": "group",
+          "type": "nominal",
+          "sort": [
+            "18–34 years",
+            "75+ years"
+          ],
+          "title": null
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 260
+      },
+      "encoding": {
+        "x": {
+          "field": "score",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          },
+          "title": "Digital ability score"
+        },
+        "y": {
+          "field": "group",
+          "type": "nominal",
+          "sort": [
+            "18–34 years",
+            "75+ years"
+          ],
+          "title": null
+        },
+        "color": {
+          "condition": {
+            "test": "datum.group === \"75+ years\"",
+            "value": "#D55E00"
+          },
+          "value": "#0072B2"
+        },
+        "tooltip": [
+          {
+            "field": "group"
+          },
+          {
+            "field": "score",
+            "format": ".1f"
+          },
+          {
+            "field": "note"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dx": 12,
+        "fontWeight": "bold",
+        "fontSize": 13,
+        "align": "left"
+      },
+      "encoding": {
+        "x": {
+          "field": "score",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "group",
+          "type": "nominal",
+          "sort": [
+            "18–34 years",
+            "75+ years"
+          ]
+        },
+        "text": {
+          "field": "score",
+          "format": ".1f"
+        }
+      }
+    }
+  ]
+}
