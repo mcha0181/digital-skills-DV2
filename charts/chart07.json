@@ -1,0 +1,118 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Online Census returns rose over a decade",
+    "fontSize": 17,
+    "fontWeight": "normal",
+    "anchor": "start",
+    "color": "#21343a",
+    "offset": 16
+  },
+  "width": "container",
+  "height": 245,
+  "data": {
+    "url": "data/census_online.csv"
+  },
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#374b50",
+      "titleColor": "#374b50",
+      "gridColor": "#e9e8e1",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    },
+    "legend": {
+      "labelColor": "#243746",
+      "titleColor": "#243746",
+      "labelFontSize": 12
+    }
+  },
+  "transform": [
+    {
+      "filter": "datum.code === \"AUS\""
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "color": "#087f72"
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal",
+          "axis": {
+            "labelAngle": 0
+          },
+          "title": null
+        },
+        "y": {
+          "field": "percent",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          },
+          "title": "Completed online (%)"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 220,
+        "color": "#087f72"
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal"
+        },
+        "y": {
+          "field": "percent",
+          "type": "quantitative"
+        },
+        "tooltip": [
+          {
+            "field": "year"
+          },
+          {
+            "field": "percent",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": -18,
+        "fontWeight": "bold",
+        "fontSize": 14
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal"
+        },
+        "y": {
+          "field": "percent",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "percent",
+          "format": ".1f"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Choose what the tiles show",
+    "fontSize": 17,
+    "fontWeight": "normal",
+    "anchor": "start",
+    "color": "#21343a",
+    "offset": 16,
+    "subtitle": "Each state has one tile, regardless of land area"
+  },
+  "width": 560,
+  "height": 320,
+  "data": {
+    "url": "data/states_2025.csv"
+  },
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#374b50",
+      "titleColor": "#374b50",
+      "gridColor": "#e9e8e1",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    },
+    "legend": {
+      "labelColor": "#243746",
+      "titleColor": "#243746",
+      "labelFontSize": 12
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "cornerRadius": 8,
+        "stroke": "white",
+        "strokeWidth": 4
+      },
+      "encoding": {
+        "x": {
+          "field": "tile_x",
+          "type": "ordinal",
+          "axis": null
+        },
+        "y": {
+          "field": "tile_y",
+          "type": "ordinal",
+          "axis": null,
+          "sort": "descending"
+        },
+        "color": {
+          "field": "selected_score",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "tealblues",
+            "domain": [
+              0,
+              100
+            ]
+          },
+          "title": "Index score"
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State"
+          },
+          {
+            "field": "selected_score",
+            "format": ".1f",
+            "title": "Selected score"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": -10,
+        "fontSize": 16,
+        "fontWeight": "bold",
+        "color": "#132d35"
+      },
+      "encoding": {
+        "x": {
+          "field": "tile_x",
+          "type": "ordinal",
+          "axis": null
+        },
+        "y": {
+          "field": "tile_y",
+          "type": "ordinal",
+          "axis": null,
+          "sort": "descending"
+        },
+        "text": {
+          "field": "code"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": 14,
+        "fontSize": 13,
+        "color": "#132d35"
+      },
+      "encoding": {
+        "x": {
+          "field": "tile_x",
+          "type": "ordinal",
+          "axis": null
+        },
+        "y": {
+          "field": "tile_y",
+          "type": "ordinal",
+          "axis": null,
+          "sort": "descending"
+        },
+        "text": {
+          "field": "selected_score",
+          "type": "quantitative",
+          "format": ".1f"
+        }
+      }
+    }
+  ],
+  "params": [
+    {
+      "name": "metric",
+      "value": "ability",
+      "bind": {
+        "input": "select",
+        "options": [
+          "ability",
+          "access",
+          "affordability"
+        ],
+        "labels": [
+          "Digital ability",
+          "Access",
+          "Affordability"
+        ],
+        "name": "Compare: "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum[metric]",
+      "as": "selected_score"
+    }
+  ]
+}
