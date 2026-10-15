@@ -1,0 +1,194 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Compare skills, access and affordability",
+    "subtitle": "Choose a measure · equal-sized state tiles",
+    "anchor": "start",
+    "font": "Arial",
+    "fontWeight": "normal",
+    "fontSize": 17,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#59696d",
+    "color": "#263940",
+    "offset": 14
+  },
+  "width": 560,
+  "height": 320,
+  "data": {
+    "url": "data/states_2025.csv"
+  },
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "view": {
+      "stroke": null
+    },
+    "legend": {
+      "labelColor": "#20343B",
+      "titleColor": "#20343B",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    },
+    "axis": {
+      "labelColor": "#20343B",
+      "titleColor": "#20343B",
+      "gridColor": "#e5e9e5",
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    }
+  },
+  "params": [
+    {
+      "name": "metric",
+      "value": "ability",
+      "bind": {
+        "input": "select",
+        "options": [
+          "ability",
+          "access",
+          "affordability"
+        ],
+        "labels": [
+          "Digital ability",
+          "Access",
+          "Affordability"
+        ],
+        "name": "Compare: "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum[metric]",
+      "as": "selected_score"
+    },
+    {
+      "calculate": "datum.selected_score >= 76 ? 'Higher' : datum.selected_score >= 72 ? 'Middle' : 'Lower'",
+      "as": "band"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "cornerRadius": 10,
+        "stroke": "#ffffff",
+        "strokeWidth": 4
+      },
+      "encoding": {
+        "x": {
+          "field": "tile_x",
+          "type": "ordinal",
+          "axis": null
+        },
+        "y": {
+          "field": "tile_y",
+          "type": "ordinal",
+          "axis": null,
+          "sort": "descending"
+        },
+        "color": {
+          "field": "selected_score",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              65,
+              82
+            ],
+            "range": [
+              "#F0F7FA",
+              "#85BDD7",
+              "#075985"
+            ]
+          },
+          "legend": {
+            "title": "Selected score"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State / territory"
+          },
+          {
+            "field": "ability",
+            "title": "Digital ability",
+            "format": ".1f"
+          },
+          {
+            "field": "access",
+            "title": "Access",
+            "format": ".1f"
+          },
+          {
+            "field": "affordability",
+            "title": "Affordability",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": -11,
+        "fontSize": 15,
+        "fontWeight": "bold",
+        "color": "#132d35"
+      },
+      "encoding": {
+        "x": {
+          "field": "tile_x",
+          "type": "ordinal"
+        },
+        "y": {
+          "field": "tile_y",
+          "type": "ordinal",
+          "sort": "descending"
+        },
+        "text": {
+          "field": "code",
+          "type": "nominal"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.selected_score >= 75",
+            "value": "#FFFFFF"
+          },
+          "value": "#20343B"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": 14,
+        "fontSize": 13,
+        "color": "#132d35"
+      },
+      "encoding": {
+        "x": {
+          "field": "tile_x",
+          "type": "ordinal"
+        },
+        "y": {
+          "field": "tile_y",
+          "type": "ordinal",
+          "sort": "descending"
+        },
+        "text": {
+          "field": "selected_score",
+          "type": "quantitative",
+          "format": ".1f"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.selected_score >= 75",
+            "value": "#FFFFFF"
+          },
+          "value": "#20343B"
+        }
+      }
+    }
+  ]
+}
