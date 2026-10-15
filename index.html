@@ -1,1 +1,962 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Australia's Digital Skills Divide</title><script src="https://cdn.jsdelivr.net/npm/vega@5"></script><script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script><script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script><style>body{margin:0;background:#f8fafc;color:#0f172a;font:16px/1.6 system-ui,Arial}header{background:#13234f;color:white;padding:70px 24px}main,header>div,footer>div{max-width:1000px;margin:auto}h1{font-size:clamp(32px,5vw,58px);line-height:1.15;margin:0 0 14px}h2{margin:52px 0 14px}p{max-width:780px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,450px),1fr));gap:16px}.card{min-width:0;background:white;border:1px solid #dce5f0;border-radius:12px;padding:20px;overflow:hidden}.chart{min-height:340px}small,.note{color:#475569}.note{font-size:13px;margin:8px 0 0}.vega-embed{max-width:100%;overflow-x:auto}footer{border-top:1px solid #cbd5e1;padding:32px 22px;margin-top:60px}a{color:#1d4ed8}header p{color:#dce7ff} @media(max-width:540px){header{padding:45px 15px}.card{padding:12px}main{padding:0 10px}.chart{overflow-x:auto}}</style></head><body><header><div><p>FIT3179 · Digital Skills · Australia</p><h1>Australia's digital skills divide</h1><p>Who is being left behind as digital ability improves? A quick look at age, education, geography and online participation.</p></div></header><main><h2>01 · Skills and people</h2><p>The 2025 Australian Digital Inclusion Index finds that digital ability is improving, but older adults and people with less formal education remain disadvantaged.</p><div class="cards" id="c1"></div><h2>02 · Places and access</h2><p>Geography matters too. These state comparisons distinguish digital skill scores from access, affordability and online participation.</p><div class="cards" id="c2"></div><h2>03 · Three geographic views</h2><p>Three different map idioms: tile-grid cartogram, proportional-symbol map and choropleth. Symbol locations are approximate; the choropleth uses state boundaries.</p><div class="cards" id="c3"></div><h2>What this means for education and work</h2><p>Digital skills help Australians participate in online learning, job applications and digitally enabled workplaces. These associations do not establish that digital ability alone causes education or employment outcomes.</p><h2>Sources and interpretation</h2><p><a href="https://digitalinclusionindex.org.au/wp-content/uploads/2025/10/ADII-Report-2025_V6-Remediated.pdf">2025 Australian Digital Inclusion Index</a> · <a href="https://www.abs.gov.au/census/guide-census-data/census-methodology/2021/how-data-collected">ABS 2021 Census collection methodology</a> · <a href="https://github.com/rowanhogan/australian-states">State boundary GeoJSON (rowanhogan/australian-states)</a></p><p>Index scores are on a 0–100 scale. Calculated figures (18–34 years and university education) are reconstructed from published scores and differences. The 2025 Index is based on survey data collected in 2024; 2025 affordability scores are not directly comparable with prior years. The online Census response series is a different indicator and is not a digital skill measure.</p><p>Charts and source CSV files: <a href="charts/chart01.json">view readable Vega-Lite JSON</a> and <a href="data/states_2025.csv">view data</a>. All ten specs are in the <code>charts</code> directory.</p><p><small>Created October 2026 · Author: YOUR NAME · AI assistance: ChatGPT used for scaffold and chart code; datasets verified against cited sources.</small></p></main><footer><div><small>Course project · FIT3179 · Monash University</small></div></footer><script>const notes=["Digital Ability scores measure capability, not just access to devices.", "The 75+ age group increased from 23.3 to 41.5; the national score rose from 64.9 to 73.6.", "The 18\u201334 score (88.9) is calculated from the published 47.4-point age gap.", "The university score (82.7) is calculated from the published 28.3-point education gap.", "Differences are index points, not percentages; these are published group contrasts.", "Access, affordability and ability are different measures.", "An online Census response indicates how a form was submitted, not proof of digital literacy.", "The ACT has the highest 2025 Digital Ability score; Tasmania the lowest.", "Circle area encodes skill score; circles mark approximate state locations, not precise survey respondents.", "State fill colour encodes the ABS online Census response rate; this measures participation, not skills."];const groups=[document.getElementById('c1'),document.getElementById('c2'),document.getElementById('c3')];async function run(){for(let i=1;i<=10;i++){const g=i<=5?groups[0]:i<=7?groups[1]:groups[2];const el=document.createElement('article');el.className='card';el.innerHTML=`<div class="chart" id="chart${i}"></div><p class="note">${notes[i-1]}</p>`;g.appendChild(el);try{let spec=await (await fetch(`charts/chart${String(i).padStart(2,'0')}.json`)).json();await vegaEmbed(`#chart${i}`,spec,{actions:false,loader:vega.loader({baseURL:location.href})});}catch(e){document.getElementById(`chart${i}`).textContent='Chart unavailable: '+e.message;console.error(e)}}}run();</script></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Australia's Digital Skills Divide | FIT3179</title>
+
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+<style>
+:root {
+  --navy: #142448;
+  --blue: #2563eb;
+  --teal: #0d9488;
+  --orange: #ea580c;
+  --text: #17233d;
+  --muted: #52627a;
+  --background: #f6f8fc;
+  --border: #dce5f0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.container {
+  max-width: 1150px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+/* Navigation */
+
+nav {
+  background: var(--navy);
+  padding: 16px 0;
+  border-bottom: 1px solid #394769;
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  color: white;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #d6e4ff;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.nav-links a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* Hero */
+
+header {
+  background: linear-gradient(135deg, #13234f, #2355a4);
+  color: white;
+  padding: 78px 0 90px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #91d5ff;
+}
+
+h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+  max-width: 850px;
+  margin: 18px 0 24px;
+}
+
+.hero-description {
+  color: #e0ebff;
+  max-width: 740px;
+  font-size: 19px;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.hero-tag {
+  border: 1px solid #759bd2;
+  border-radius: 30px;
+  padding: 5px 15px;
+  color: #dbeafe;
+  font-size: 13px;
+}
+
+/* Sections */
+
+section {
+  padding: 48px 0 28px;
+}
+
+.section-number {
+  color: var(--blue);
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1.25;
+  letter-spacing: -0.8px;
+  margin: 10px 0 18px;
+}
+
+.section-description {
+  color: var(--muted);
+  max-width: 830px;
+  margin-bottom: 26px;
+  font-size: 16px;
+}
+
+/* Key statistics */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: -42px auto 16px;
+  position: relative;
+}
+
+.stat {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 7px 25px rgba(20, 36, 72, 0.07);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: clamp(35px, 4vw, 51px);
+  font-weight: 850;
+  line-height: 1.2;
+  color: var(--navy);
+  margin: 12px 0;
+}
+
+.stat-value.orange {
+  color: var(--orange);
+}
+
+.stat-value.teal {
+  color: var(--teal);
+}
+
+.stat-detail {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Chart cards */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  min-width: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+.card-number {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--blue);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.chart {
+  min-height: 330px;
+  width: 100%;
+}
+
+.chart .vega-embed {
+  max-width: 100%;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.note {
+  margin: 18px 0 0;
+  padding-top: 15px;
+  border-top: 1px solid #e5eaf2;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Maps */
+
+.map-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 26px;
+}
+
+.map-grid .card {
+  padding: 30px;
+}
+
+.map-grid .chart {
+  min-height: 430px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.map-heading {
+  color: var(--navy);
+  font-weight: 750;
+  font-size: 19px;
+  margin: 0 0 14px;
+}
+
+.map-explanation {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+/* Storytelling */
+
+.story {
+  background: #edf4ff;
+  border-left: 5px solid var(--blue);
+  border-radius: 12px;
+  padding: 24px 30px;
+  margin: 30px 0;
+}
+
+.story.orange {
+  background: #fff3e9;
+  border-left-color: var(--orange);
+}
+
+.story.teal {
+  background: #e9f8f5;
+  border-left-color: var(--teal);
+}
+
+.story h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.story p {
+  margin: 0;
+  color: #334155;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #dce5f0;
+  margin: 40px 0 5px;
+}
+
+/* Sources */
+
+.sources {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.sources a {
+  color: #1d4ed8;
+  overflow-wrap: anywhere;
+}
+
+.sources p {
+  max-width: 950px;
+}
+
+.metadata {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 24px;
+  border-radius: 12px;
+  margin-top: 22px;
+}
+
+.metadata h3 {
+  margin-top: 0;
+}
+
+/* Footer */
+
+footer {
+  background: var(--navy);
+  color: #cbd5e1;
+  margin-top: 60px;
+  padding: 36px 0;
+  font-size: 13px;
+}
+
+/* Responsive */
+
+@media(max-width: 850px) {
+  .stats {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header {
+    padding: 55px 0;
+  }
+}
+
+@media(max-width: 540px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .card,
+  .map-grid .card {
+    padding: 15px;
+  }
+
+  .chart {
+    overflow-x: auto;
+  }
+
+  .story {
+    padding: 20px;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav>
+  <div class="container nav-inner">
+    <div class="brand">DIGITAL DIVIDE / AU</div>
+
+    <div class="nav-links">
+      <a href="#people">People</a>
+      <a href="#places">Places</a>
+      <a href="#maps">Maps</a>
+      <a href="#impact">Education & Work</a>
+      <a href="#sources">Sources</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+
+<header>
+  <div class="container">
+    <div class="eyebrow">
+      FIT3179 · Data Visualisation 2 · 2026
+    </div>
+
+    <h1>
+      Australia's digital skills divide
+    </h1>
+
+    <p class="hero-description">
+      Digital ability is improving across Australia.
+      But not everyone is progressing equally.
+      Explore how age, education and geography
+      shape the nation's digital divide.
+    </p>
+
+    <div class="hero-tags">
+      <span class="hero-tag">Digital literacy</span>
+      <span class="hero-tag">Age inequality</span>
+      <span class="hero-tag">Education</span>
+      <span class="hero-tag">Geography</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- KEY STATISTICS -->
+
+<div class="stats">
+
+  <div class="stat">
+    <div class="stat-label">
+      National digital ability · 2025
+    </div>
+
+    <div class="stat-value teal">
+      73.6
+    </div>
+
+    <p class="stat-detail">
+      Australia's digital ability score,
+      up from 64.9 in 2023.
+    </p>
+  </div>
+
+  <div class="stat">
+    <div class="stat-label">
+      Age-group gap · 2025
+    </div>
+
+    <div class="stat-value orange">
+      47.4
+    </div>
+
+    <p class="stat-detail">
+      Index-point difference between
+      Australians aged 18–34 and those aged 75+.
+    </p>
+  </div>
+
+  <div class="stat">
+    <div class="stat-label">
+      Older Australians · 75+
+    </div>
+
+    <div class="stat-value">
+      41.5
+    </div>
+
+    <p class="stat-detail">
+      Digital ability score in 2025,
+      compared with 23.3 in 2023.
+    </p>
+  </div>
+
+</div>
+
+<!-- SECTION 1 -->
+
+<section id="people">
+
+  <div class="section-number">Chapter 01</div>
+
+  <h2>
+    Skills are improving, but the age gap remains
+  </h2>
+
+  <p class="section-description">
+    Digital ability measures the skills and confidence
+    people need to participate in an increasingly
+    digital society. The Australian Digital Inclusion
+    Index highlights substantial differences across
+    age groups and education levels.
+  </p>
+
+  <div class="cards" id="c1"></div>
+
+  <div class="story orange">
+    <h3>Key finding: age remains a major divide</h3>
+
+    <p>
+      Australians aged 75 and over have made substantial
+      improvements in digital ability. However, their
+      2025 score remains far below that of younger adults.
+      This suggests that improvements in national averages
+      do not necessarily eliminate digital inequality.
+    </p>
+  </div>
+
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 2 -->
+
+<section id="places">
+
+  <div class="section-number">Chapter 02</div>
+
+  <h2>
+    Where Australians live matters
+  </h2>
+
+  <p class="section-description">
+    Digital inclusion varies geographically.
+    Comparing states and territories helps reveal
+    differences in digital ability and opportunities
+    for online participation.
+  </p>
+
+  <div class="cards" id="c2"></div>
+
+  <div class="story teal">
+    <h3>Understanding different indicators</h3>
+
+    <p>
+      Digital ability, internet access, affordability
+      and online participation describe different
+      aspects of digital inclusion. A higher online
+      Census response rate does not necessarily mean
+      a population has stronger digital skills.
+    </p>
+  </div>
+
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 3 -->
+
+<section id="maps">
+
+  <div class="section-number">Chapter 03</div>
+
+  <h2>
+    Three maps, three ways to see the divide
+  </h2>
+
+  <p class="section-description">
+    Geographic information can be represented through
+    different visualisation techniques. These maps
+    show how tile positioning, proportional symbols
+    and geographic boundaries communicate state-level
+    differences.
+  </p>
+
+  <div class="map-grid" id="c3"></div>
+
+  <div class="story">
+    <h3>Why use three different maps?</h3>
+
+    <p>
+      The tile-grid cartogram treats states as equal-sized
+      units, the proportional-symbol map uses circle size
+      to compare scores, and the choropleth colours
+      geographic regions according to their values.
+      Each representation offers a different perspective.
+    </p>
+  </div>
+
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 4 -->
+
+<section id="impact">
+
+  <div class="section-number">Chapter 04</div>
+
+  <h2>
+    Why digital skills matter for education and work
+  </h2>
+
+  <p class="section-description">
+    Digital capabilities are increasingly relevant to
+    everyday participation in education and employment.
+    Online learning, job applications and workplace
+    communication often depend on digital skills.
+  </p>
+
+  <div class="story">
+    <h3>Education</h3>
+    <p>
+      Digital skills can support participation in online
+      learning platforms, access to educational resources
+      and communication with teachers or institutions.
+      Differences in digital ability may create additional
+      barriers for learners with fewer digital capabilities.
+    </p>
+  </div>
+
+  <div class="story teal">
+    <h3>Employment</h3>
+    <p>
+      Applying for jobs, completing digital training and
+      using workplace technology can all require digital
+      capabilities. People with weaker digital skills
+      may face additional challenges in these activities.
+    </p>
+  </div>
+
+  <p class="section-description">
+    These are potential implications of digital inequality.
+    The charts above do not directly measure employment
+    outcomes or prove that digital ability causes
+    differences in education or employment success.
+  </p>
+
+</section>
+
+<hr class="divider">
+
+<!-- SECTION 5 -->
+
+<section id="sources" class="sources">
+
+  <div class="section-number">Sources & Methodology</div>
+
+  <h2>Where the data comes from</h2>
+
+  <p>
+    <strong>Source 1: Australian Digital Inclusion Index 2025</strong>
+  </p>
+
+  <p>
+    <a
+      href="https://digitalinclusionindex.org.au/wp-content/uploads/2025/10/ADII-Report-2025_V6-Remediated.pdf"
+      target="_blank"
+      rel="noopener noreferrer">
+      Australian Digital Inclusion Index Report (2025)
+    </a>
+  </p>
+
+  <p>
+    Used to compare digital ability across age,
+    education and geographic groups, including
+    changes between 2023 and 2025.
+  </p>
+
+  <p>
+    <strong>Source 2: Australian Bureau of Statistics</strong>
+  </p>
+
+  <p>
+    <a
+      href="https://www.abs.gov.au/census/guide-census-data/census-methodology/2021/how-data-collected"
+      target="_blank"
+      rel="noopener noreferrer">
+      ABS Census 2021 — How data was collected
+    </a>
+  </p>
+
+  <p>
+    Used to examine historical differences in
+    online Census response rates. This is an
+    online participation measure, not a direct
+    digital literacy score.
+  </p>
+
+  <p>
+    <strong>Geographic boundaries:</strong>
+    <a
+      href="https://github.com/rowanhogan/australian-states"
+      target="_blank"
+      rel="noopener noreferrer">
+      Australian states GeoJSON
+    </a>
+  </p>
+
+  <div class="metadata">
+
+    <h3>Data interpretation</h3>
+
+    <p>
+      Digital ability is represented on a 0–100 index
+      scale. Differences between scores are index
+      points, not percentages.
+    </p>
+
+    <p>
+      The 18–34 score of 88.9 and university-education
+      score of 82.7 were reconstructed from published
+      comparisons. The 2025 Index uses survey data
+      collected in 2024.
+    </p>
+
+    <p>
+      The 2025 affordability indicator is not directly
+      comparable with earlier years. Census response
+      rates are kept separate from digital ability
+      scores because they measure different concepts.
+    </p>
+
+    <p>
+      <strong>Vega-Lite specifications:</strong>
+      <a href="charts/chart01.json">
+        View chart JSON
+      </a>
+    </p>
+
+    <p>
+      <strong>Source data:</strong>
+      <a href="data/states_2025.csv">
+        View CSV data
+      </a>
+    </p>
+
+    <p>
+      All ten chart specifications are available
+      in the public GitHub repository.
+    </p>
+
+  </div>
+
+  <p style="margin-top:25px;">
+    <strong>Author:</strong> YOUR NAME<br>
+    <strong>Created:</strong> October 2026<br>
+    <strong>Unit:</strong> FIT3179 Data Visualisation 2<br>
+    <strong>University:</strong> Monash University
+  </p>
+
+  <p>
+    <strong>AI acknowledgement:</strong>
+    ChatGPT was used to assist with HTML, CSS,
+    Vega-Lite code and explanatory text.
+    Data should be checked against the cited sources.
+  </p>
+
+</section>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="container">
+    Australia's Digital Skills Divide · FIT3179 · 2026
+  </div>
+</footer>
+
+<!-- CHART RENDERING -->
+
+<script>
+
+/*
+  All charts load from the existing charts folder.
+
+  Charts 1–5: Skills and people
+  Charts 6–7: Places and access
+  Charts 8–10: Three map idioms
+*/
+
+const notes = [
+
+  "Digital Ability scores measure capability, not just access to devices.",
+
+  "The national score increased from 64.9 in 2023 to 73.6 in 2025. The 75+ age-group score increased from 23.3 to 41.5.",
+
+  "Younger adults retain a substantial digital ability advantage. The 18–34 score is reconstructed from the published age gap.",
+
+  "Educational attainment is associated with differences in digital ability. The university score is calculated from a published group contrast.",
+
+  "These values represent index-point differences between groups, not percentage differences.",
+
+  "Access, affordability and ability are distinct dimensions of digital inclusion.",
+
+  "Online Census responses indicate how a Census form was submitted and should not be interpreted as direct evidence of digital literacy.",
+
+  "Tile-grid cartogram: equal-sized tiles represent states and territories. Colour encodes digital ability.",
+
+  "Proportional-symbol map: circle area represents digital ability. Locations are approximate state positions.",
+
+  "Choropleth map: geographic regions are coloured by their online Census response percentages, not digital ability."
+
+];
+
+const mapTitles = [
+  "Tile-grid cartogram",
+  "Proportional-symbol map",
+  "Choropleth map"
+];
+
+const mapDescriptions = [
+  "Each state and territory is represented by an equal-sized tile. Geographic size does not affect the comparison.",
+
+  "Circles are positioned approximately on the Australian map. Larger circles represent higher digital ability scores.",
+
+  "State boundaries are filled according to online Census response percentages. This measures online participation."
+];
+
+const groups = [
+  document.getElementById("c1"),
+  document.getElementById("c2"),
+  document.getElementById("c3")
+];
+
+async function loadChart(i) {
+
+  const group =
+    i <= 5 ? groups[0] :
+    i <= 7 ? groups[1] :
+    groups[2];
+
+  const article = document.createElement("article");
+
+  article.className = "card";
+
+  const chartId = `chart${i}`;
+
+  if (i >= 8) {
+
+    article.innerHTML = `
+      <div class="card-number">
+        VISUALISATION ${String(i).padStart(2,"0")}
+        · MAP
+      </div>
+
+      <h3 class="map-heading">
+        ${mapTitles[i-8]}
+      </h3>
+
+      <p class="map-explanation">
+        ${mapDescriptions[i-8]}
+      </p>
+
+      <div class="chart" id="${chartId}">
+        Loading map...
+      </div>
+
+      <p class="note">
+        ${notes[i-1]}
+      </p>
+    `;
+
+  } else {
+
+    article.innerHTML = `
+      <div class="card-number">
+        VISUALISATION ${String(i).padStart(2,"0")}
+      </div>
+
+      <div class="chart" id="${chartId}">
+        Loading chart...
+      </div>
+
+      <p class="note">
+        ${notes[i-1]}
+      </p>
+    `;
+  }
+
+  group.appendChild(article);
+
+  const chartElement = document.getElementById(chartId);
+
+  try {
+
+    const filename =
+      `chart${String(i).padStart(2,"0")}.json`;
+
+    const response = await fetch(`charts/${filename}`);
+
+    if (!response.ok) {
+      throw new Error(
+        `${filename} returned HTTP ${response.status}`
+      );
+    }
+
+    const spec = await response.json();
+
+    chartElement.textContent = "";
+
+    await vegaEmbed(
+      `#${chartId}`,
+      spec,
+      {
+        actions: false,
+        renderer: "svg",
+        loader: vega.loader({
+          baseURL: document.baseURI
+        })
+      }
+    );
+
+  } catch (error) {
+
+    chartElement.textContent =
+      "Chart unavailable: " + error.message;
+
+    chartElement.style.color = "#b91c1c";
+    chartElement.style.fontSize = "14px";
+
+    console.error(
+      `Error loading chart ${i}:`,
+      error
+    );
+  }
+}
+
+async function loadAllCharts() {
+
+  // Load in sequence to preserve the story order.
+  for (let i = 1; i <= 10; i++) {
+    await loadChart(i);
+  }
+
+}
+
+loadAllCharts();
+
+</script>
+
+</body>
+</html>
