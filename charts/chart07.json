@@ -1,0 +1,67 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "axis": {
+      "labelColor": "#334155",
+      "titleColor": "#334155",
+      "gridColor": "#e2e8f0"
+    },
+    "view": {
+      "stroke": null
+    }
+  },
+  "title": {
+    "text": "Online Census response grew between 2011 and 2021",
+    "fontSize": 16,
+    "anchor": "start",
+    "color": "#172554"
+  },
+  "data": {
+    "url": "data/census_online.csv"
+  },
+  "mark": {
+    "type": "line",
+    "point": {
+      "filled": true,
+      "size": 100
+    },
+    "strokeWidth": 3,
+    "color": "#2563eb"
+  },
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "ordinal",
+      "title": "Census year"
+    },
+    "y": {
+      "field": "percent",
+      "type": "quantitative",
+      "title": "Dwellings responding online (%)",
+      "scale": {
+        "domain": [
+          0,
+          100
+        ]
+      }
+    },
+    "tooltip": [
+      {
+        "field": "year"
+      },
+      {
+        "field": "percent",
+        "type": "quantitative"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "filter": "datum.code === \"AUS\""
+    }
+  ]
+}

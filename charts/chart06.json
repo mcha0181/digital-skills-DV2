@@ -1,0 +1,80 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "axis": {
+      "labelColor": "#334155",
+      "titleColor": "#334155",
+      "gridColor": "#e2e8f0"
+    },
+    "view": {
+      "stroke": null
+    }
+  },
+  "title": {
+    "text": "The three components of inclusion differ by state",
+    "fontSize": 16,
+    "anchor": "start",
+    "color": "#172554"
+  },
+  "data": {
+    "url": "data/states_2025.csv"
+  },
+  "mark": {
+    "type": "rect",
+    "stroke": "white",
+    "strokeWidth": 2
+  },
+  "encoding": {
+    "x": {
+      "field": "code",
+      "type": "nominal",
+      "title": "State or territory"
+    },
+    "y": {
+      "field": "dimension",
+      "type": "nominal",
+      "title": null
+    },
+    "color": {
+      "field": "value",
+      "type": "quantitative",
+      "scale": {
+        "scheme": "blues",
+        "domain": [
+          60,
+          85
+        ]
+      },
+      "title": "Index score"
+    },
+    "tooltip": [
+      {
+        "field": "state"
+      },
+      {
+        "field": "dimension"
+      },
+      {
+        "field": "value",
+        "type": "quantitative"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "fold": [
+        "access",
+        "affordability",
+        "ability"
+      ],
+      "as": [
+        "dimension",
+        "value"
+      ]
+    }
+  ]
+}

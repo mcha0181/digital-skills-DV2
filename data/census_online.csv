@@ -1,0 +1,28 @@
+state,code,year,percent
+New South Wales,NSW,2011,35.5
+New South Wales,NSW,2016,60.0
+New South Wales,NSW,2021,80.0
+Victoria,VIC,2011,32.7
+Victoria,VIC,2016,58.9
+Victoria,VIC,2021,79.8
+Queensland,QLD,2011,34.0
+Queensland,QLD,2016,58.3
+Queensland,QLD,2021,78.3
+South Australia,SA,2011,30.7
+South Australia,SA,2016,52.0
+South Australia,SA,2021,71.0
+Western Australia,WA,2011,37.1
+Western Australia,WA,2016,61.5
+Western Australia,WA,2021,82.4
+Tasmania,TAS,2011,31.1
+Tasmania,TAS,2016,45.0
+Tasmania,TAS,2021,61.3
+Northern Territory,NT,2011,33.8
+Northern Territory,NT,2016,49.4
+Northern Territory,NT,2021,74.9
+Australian Capital Territory,ACT,2011,46.3
+Australian Capital Territory,ACT,2016,78.9
+Australian Capital Territory,ACT,2021,93.2
+Australia,AUS,2011,34.3
+Australia,AUS,2016,58.8
+Australia,AUS,2021,78.9

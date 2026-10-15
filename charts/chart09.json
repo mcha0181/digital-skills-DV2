@@ -1,0 +1,100 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 540,
+  "height": 370,
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "axis": {
+      "labelColor": "#334155",
+      "titleColor": "#334155",
+      "gridColor": "#e2e8f0"
+    },
+    "view": {
+      "stroke": null
+    }
+  },
+  "title": {
+    "text": "MAP 2 \u00b7 Graduated-symbol map: digital ability",
+    "fontSize": 16,
+    "anchor": "start"
+  },
+  "projection": {
+    "type": "mercator",
+    "center": [
+      134,
+      -26
+    ],
+    "scale": 650
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2/data/world-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id == 36"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#eef2ff",
+        "stroke": "#94a3b8"
+      }
+    },
+    {
+      "data": {
+        "url": "data/states_2025.csv"
+      },
+      "mark": {
+        "type": "circle",
+        "stroke": "white",
+        "strokeWidth": 1,
+        "opacity": 0.88
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "ability",
+          "type": "quantitative",
+          "scale": {
+            "range": [
+              110,
+              1300
+            ]
+          },
+          "title": "Digital Ability"
+        },
+        "color": {
+          "field": "ability",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "blues"
+          },
+          "title": "Score"
+        },
+        "tooltip": [
+          {
+            "field": "state"
+          },
+          {
+            "field": "ability",
+            "type": "quantitative"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "axis": {
+      "labelColor": "#334155",
+      "titleColor": "#334155",
+      "gridColor": "#e2e8f0"
+    },
+    "view": {
+      "stroke": null
+    }
+  },
+  "title": {
+    "text": "The age gap remains large in 2025",
+    "fontSize": 16,
+    "anchor": "start",
+    "color": "#172554"
+  },
+  "data": {
+    "url": "data/group_comparison.csv"
+  },
+  "mark": {
+    "type": "bar",
+    "color": "#0d9488"
+  },
+  "encoding": {
+    "y": {
+      "field": "group",
+      "type": "nominal",
+      "sort": [
+        "18–34 years",
+        "75+ years"
+      ],
+      "title": null
+    },
+    "x": {
+      "field": "score",
+      "type": "quantitative",
+      "title": "Digital Ability score",
+      "scale": {
+        "domain": [
+          0,
+          100
+        ]
+      }
+    },
+    "tooltip": [
+      {
+        "field": "group"
+      },
+      {
+        "field": "score",
+        "type": "quantitative"
+      },
+      {
+        "field": "note"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "filter": "datum.group === \"18–34 years\" || datum.group === \"75+ years\""
+    }
+  ]
+}

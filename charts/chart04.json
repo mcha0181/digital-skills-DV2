@@ -1,0 +1,65 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "config": {
+    "background": "transparent",
+    "font": "Arial",
+    "axis": {
+      "labelColor": "#334155",
+      "titleColor": "#334155",
+      "gridColor": "#e2e8f0"
+    },
+    "view": {
+      "stroke": null
+    }
+  },
+  "title": {
+    "text": "Education is associated with digital ability",
+    "fontSize": 16,
+    "anchor": "start",
+    "color": "#172554"
+  },
+  "data": {
+    "url": "data/group_comparison.csv"
+  },
+  "mark": {
+    "type": "bar",
+    "color": "#7c3aed"
+  },
+  "encoding": {
+    "y": {
+      "field": "group",
+      "type": "nominal",
+      "title": null
+    },
+    "x": {
+      "field": "score",
+      "type": "quantitative",
+      "title": "Digital Ability score",
+      "scale": {
+        "domain": [
+          0,
+          100
+        ]
+      }
+    },
+    "tooltip": [
+      {
+        "field": "group"
+      },
+      {
+        "field": "score",
+        "type": "quantitative"
+      },
+      {
+        "field": "note"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "filter": "datum.group === \"University qualification\" || datum.group === \"Did not complete secondary school\""
+    }
+  ]
+}
